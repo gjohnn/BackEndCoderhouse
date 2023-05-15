@@ -1,0 +1,16 @@
+{
+  "type": "module",
+  "name": "back1rapreentregamod1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "nodemon ./src/app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "handlebars": "^4.7.7"
+  }
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "title": "fideos",
+    "description": "moñito",
+    "price": 300,
+    "thumbnail": [""],
+    "code": "123123",
+    "stock": 23,
+    "category": "comida",
+    "status": true
+  },
+  {
+    "id": 2,
+    "title": "tomate",
+    "description": "perita",
+    "price": 200,
+    "thumbnail": [""],
+    "code": "12312",
+    "stock": 23,
+    "category": "comida",
+    "status": true
+  },
+  {
+    "id": 3,
+    "title": "arroz",
+    "description": "integral",
+    "price": 230,
+    "thumbnail": [""],
+    "code": "123",
+    "stock": 10,
+    "category": "comida",
+    "status": true
+  },
+  {
+    "id": 4,
+    "title": "durazno en lata",
+    "description": "corte redondo",
+    "price": 400,
+    "thumbnail": [""],
+    "code": "83672",
+    "stock": 9,
+    "category": "comida",
+    "status": true
+  }
+]
