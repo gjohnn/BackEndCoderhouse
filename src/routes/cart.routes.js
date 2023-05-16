@@ -50,13 +50,11 @@ cartsRouter.post("/", async (req, res) => {
         .json({ status: "Error", msg: "no se agrego el producto al carrito" });
     }
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        status: "error",
-        msg: "no se pudo agregar el producto al carrito",
-        error: error.message,
-      });
+    return res.status(500).json({
+      status: "error",
+      msg: "no se pudo agregar el producto al carrito",
+      error: error.message,
+    });
   }
 });
 
@@ -64,43 +62,42 @@ cartsRouter.post("/:cid/product/:pid", async (req, res) => {
   try {
     const cid = req.params.cid;
     const pid = req.params.pid;
+    const cartById = await prodManager.getProductById(cid);
     const productById = await prodManager.getProductById(pid);
-    if (productById) {
-      const createdProduct = await cartManager.addProductToCart(
-        cid,
-        productById
-      );
-      if (createdProduct) {
-        return res
-          .status(201)
-          .json({
+    if (cartById) {
+      if (productById) {
+        const addProductToCart = await cartManager.addProductToCart(
+          cid,
+          productById
+        );
+        if (addProductToCart) {
+          return res.status(201).json({
             status: "success",
             msg: "Producto agregado al carrito",
-            data: createdProduct,
+            data: addProductToCart,
           });
-      } else {
-        return res
-          .status(400)
-          .json({
+        } else {
+          return res.status(400).json({
             status: "error",
-            msg: "No se agrego el producto al carrito",
+            msg: "No se agregó el producto al carrito",
           });
-      }
-    } else {
-      return res
-        .status(400)
-        .json({
+        }
+      } else {
+        return res.status(400).json({
           status: "error",
-          msg: "No se encontro producto para agregar al carrito",
+          msg: "No existe el producto",
         });
+      }
+    }else{
+        return res.status(400).json({
+            status: "error",
+            msg: "No existe el carrito",
+          })
     }
-  } catch (error) {
-    return res
-      .status(500)
-      .json({
+  } catch {
+    return res.status(400).json({
         status: "error",
-        msg: "No se pudo agregar el producto al carrito",
-        error: error.message,
-      });
+        msg: "No se realiazó la operación",
+      })
   }
 });
