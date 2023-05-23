@@ -61,6 +61,7 @@ class ProductManager {
     return productById;
   }
   async addProduct(product) {
+    console.log(product);
     if (
       !product.title ||
       !product.description ||
@@ -121,6 +122,32 @@ async addProductToCart(cid, product) {
   return true;
 
 }
+
+async deleteProd(id) {
+  const productIndex = this.products.findIndex((prod) => parseInt(prod.id) === parseInt(id))
+  if (productIndex === -1) {
+      console.log('Producto para eliminar no encontrado')
+      return false;
+  }
+  this.products.splice(productIndex, 1)
+  await this.saveData()
+  return true;
+}
+
+async updateProd(id, updatedFields) {
+  const productIndex = this.products.findIndex((prod) => parseInt(prod.id) === parseInt(id))
+  if (productIndex === -1) {
+      console.log('Producto para actualizar no encontrado')
+      return false
+  }
+  const product = { ...this.products[productIndex], ...updatedFields }
+  this.products[productIndex] = product
+  await this.saveData()
+  return true;
+}
+
+
+
 }
 
 export default ProductManager;

@@ -85,3 +85,26 @@ productsRouter.get('/:pid',(req,res)=>{
       return res.status(500).json({ status: 'error', msg: 'No se pudo encontrar el producto', error: error.message });
   }
 })
+
+productsRouter.delete('/:id', async(req,res)=>{
+  const id=req.params.id
+  const deletedProduct = await prodManager.deleteProd(id)
+  return res
+  .status(200).
+  json({status:"success", msg:'Producto eliminado',data:deletedProduct})
+})
+
+productsRouter.put('/:id',async (req,res)=>{
+  const id=req.params.id
+  const newBody=req.body
+  const updatedProduct = await prodManager.updateProd(id, newBody)
+  if (!updatedProduct) {
+      console.log('Producto a actualizar no encontrado')
+      return res
+      .status(404)
+      .json({status:"error", msg:'Producto para actualizar no encontrado',data:{}})
+  }
+  return res
+  .status(200).
+  json({status:"success", msg:'Producto modificado',data:updatedProduct})
+})
