@@ -1,6 +1,9 @@
 import express from "express";
 import ProductManager from "../functions/productManager.js";
+import { upload } from "../functions/productManager.js";
+
 export const productsRouter = express.Router();
+
 
 const prodManager = new ProductManager("./src/data/data.json");
 
@@ -33,10 +36,18 @@ productsRouter.get("/", async (req, res) => {
   }
 });
 
-productsRouter.post('/', async (req,res)=>{
+productsRouter.post('/',  upload.single('file'), async (req,res)=>{
   try{
+    if(!req.file){
+      return res
+      .status(400)
+      .json({status: "error", msg:"Suba un archivo"})
+    }
+
+    
       const producto = req.body
       const newProd = await prodManager.addProduct(producto)
+      producto.file = req.file.filename;
       if (newProd) {
           return res
           .status(201).
@@ -53,6 +64,7 @@ productsRouter.post('/', async (req,res)=>{
       return res.status(500).json({ status: 'error', msg: 'No se pudo crear el producto', error: error.message });
   }
 })
+
 
 productsRouter.get('/:pid',(req,res)=>{
   try{

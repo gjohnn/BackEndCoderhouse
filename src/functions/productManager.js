@@ -1,5 +1,16 @@
 import fs from "fs";
-import { CLIENT_RENEG_LIMIT } from "tls";
+import multer from "multer";
+
+const storage = multer.diskStorage({
+  destination: function (req,file, cb){
+    cb(null, './public/img');
+  },
+  filename: function(req, file, cb){
+    cb(null,`${Date.now()} - ${file.originalname}`)
+  }
+})
+
+export const upload = multer ({storage: storage})
 
 class ProductManager {
   constructor(path) {
@@ -54,7 +65,7 @@ class ProductManager {
       !product.title ||
       !product.description ||
       !product.price ||
-      !product.thumbnail ||
+      !product.file ||
       !product.code ||
       !product.stock ||
       !product.category ||
