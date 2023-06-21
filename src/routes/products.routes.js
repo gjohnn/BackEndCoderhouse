@@ -1,11 +1,91 @@
-import express from "express";
-import ProductManager from "../functions/productManager.js";
+
+import { Router } from "express";
+import ProductManager from "../DAO/prodsDAO.js";
 import { upload } from "../functions/productManager.js";
 
-export const productsRouter = express.Router();
+const productsRouter = Router();
+
+const prodManager = new ProductManager();
+
+//const prodManager = new ProductManager("./src/data/data.json");
 
 
-const prodManager = new ProductManager("./src/data/data.json");
+productsRouter.get("/", async (req, res) => {
+
+  let prods;
+    try{
+        prods= await prodManager.getAllProds();
+    }catch{
+        res.status(404).send({status:"error"})
+    }
+    res.send({status:"success", payload:prods})
+});
+
+productsRouter.post("/", async(req,res)=>{
+  let response;
+  let {title,description,price,code,file,stock,category,status} = req.body;
+  if (!title || !price /*|| !code || !stock || !category || !status*/){
+     return res.send({status:"error", error:"Incomplete values"})
+  }
+  try{
+      response = await  prodManager.addProd(title,description,price,code,file,stock,category,status);
+  }catch(error){
+     res.status(500).send({status:"error", error:"Something is missing"})
+  }
+  res.send({status:"success", payload:response})
+})
+
+productsRouter.get("/:prodid", async(req,res)=>{
+  let prodId = req.params.prodid;
+  console.log(prodId);
+    let prod;
+    try{
+      prod = await prodManager.getProdById(prodId);
+        if (prod){
+            res.send({status:"success", payload:{prod}})
+        }else{
+            res.send({status:"success", payload:"No existe"})
+        }
+    }catch(error){
+        res.status(404).send({status:"error", error: "error"})
+    }
+})
+productsRouter.put("/:prodid", async(req,res)=>{
+  let prodId = req.params.prodid;
+
+  let {title,description,price,code,file,stock,category,status} = req.body;
+
+  if (!title) return res.send({status:"error", error:"Incomplete values"})
+
+  let updatedProd;
+
+  try{
+    updatedProd = await prodManager.updateProd(prodId, {title,description,price,code,file,stock,category,status} );
+  }catch(error){
+      res.status(404).send({status:"error", error})
+  }
+  
+  res.send({status:"Update has been successed", payload:updatedProd})
+})
+export default productsRouter;
+
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 productsRouter.get("/", async (req, res) => {
   let allProds = await prodManager.getProds();
@@ -108,3 +188,5 @@ productsRouter.put('/:id',async (req,res)=>{
   .status(200).
   json({status:"success", msg:'Producto modificado',data:updatedProduct})
 })
+*/
+
