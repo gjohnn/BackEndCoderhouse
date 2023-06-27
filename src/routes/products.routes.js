@@ -1,7 +1,7 @@
 
 import { Router } from "express";
 import ProductManager from "../DAO/prodsDAO.js";
-import { upload } from "../functions/productManager.js";
+import { upload } from "../DAO/oldFunctions.js";
 
 const productsRouter = Router();
 
@@ -11,20 +11,32 @@ const prodManager = new ProductManager();
 
 
 productsRouter.get("/", async (req, res) => {
+  let sortPrice = parseInt(req.query.sort) || 0;
 
+ 
+    let titlePage = "Lista de productos para clientes"
   let prods;
     try{
-        prods= await prodManager.getAllProds();
+      if(sortPrice){
+        prods = await prodManager.getAllProds(sortPrice);
+      }else{
+        prods = await prodManager.getAllProds();
+      }
     }catch{
         res.status(404).send({status:"error"})
     }
-    res.send({status:"success", payload:prods})
+    res.status(200).render("products",{titlePage,prods})
 });
 
 productsRouter.post("/", async(req,res)=>{
+
+  let prods= await prodManager.getAllProds();
   let response;
   let {title,description,price,code,file,stock,category,status} = req.body;
-  if (!title || !price /*|| !code || !stock || !category || !status*/){
+  if(code == prods.filter(()=> prods.code == code)){
+    return res.send({status:"error", error:"Code already exist"})
+  }
+  if (!title || !price || !code){
      return res.send({status:"error", error:"Incomplete values"})
   }
   try{

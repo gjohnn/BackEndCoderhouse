@@ -1,54 +1,69 @@
 import { prodModel } from "./models/prods.model.js";
 
 class ProductManager {
-    constructor(){
-        this.model = prodModel;
-    }
+  constructor() {
+    this.model = prodModel;
+  }
 
-    async getAllProds(){
-        let prods;
-    try{
-        prods = await prodModel.find();
-    }catch(error){
-        console.log(error);
+  async getAllProds(sortPrice) {
+    let prods;
+    try {
+
+      prods = await prodModel.find().sort({"price":sortPrice}).lean();
+    } catch (error) {
+      console.log(error);
     }
     return prods;
-    }
+  }
 
-    async getProdById(id){
-        let prod;
-    try{
-        prod = await prodModel.findOne({_id:id});
-    }catch(error){
-        console.log(error);
+  async getProdById(id) {
+    let prod;
+    try {
+      prod = await prodModel.findOne({ _id: id });
+    } catch (error) {
+      console.log(error);
     }
-        return prod;
-    }
+    return prod;
+  }
 
-    async addProd(title,description,price,code,file,stock,category,status){
-        let newProd;
-        try{
-            newProd = await prodModel.create({
-                title,description,price,code,file,stock,category,status
-            });
-        }catch(error){
-            console.log(error);
-        }
-        return newProd;
+  async addProd(
+    title,
+    description,
+    price,
+    code,
+    file,
+    stock,
+    category,
+    status
+  ) {
+    let newProd;
+    try {
+      newProd = await prodModel.create({
+        title,
+        description,
+        price,
+        code,
+        file,
+        stock,
+        category,
+        status,
+      });
+    } catch (error) {
+      console.log(error);
     }
+    return newProd;
+  }
 
-    
-
-    async updateProd(prodid, props){
-        let prod;
-        try{
-            prod = await prodModel.updateOne({_id:prodid}, props)
-        }catch(error){
-            console.log(error);
-        }
-        return prod;
+  async updateProd(prodId, props) {
+    let prod;
+    try {
+      prod = await prodModel.updateOne({ _id: prodId }, props);
+    } catch (error) {
+      console.log(error);
     }
-/*
+    return prod;
+  }
+  /*
     async getProdById(id){
         let user;
     try{

@@ -1,13 +1,11 @@
 
   <h3>{{this.namePage}}</h3>
   <div>
-  <h4>Precios</h4>
-  <button type="button" class="btn btn-light" id="ascBtn" >⇧</button>
-  <button type="button" class="btn btn-light" id="descBtn"> ⇩</button>
+  <h4>Carritos</h4>
 
   </div>
 <div class="container d-flex flex-wrap ">
-  {{#each prods}}
+  {{#each carts}}
     <div class="m-4 border border-light p-1 ">
       <li>Id: {{this._id}}</li>
       <li>Title: {{this.title}}</li>
@@ -24,6 +22,3 @@
 
   {{/each}}
 </div>
-
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/testing-sockets.js"></script>

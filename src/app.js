@@ -13,15 +13,18 @@ import userRouter from "./routes/user.routes.js";
 //DB
 import { userModel } from "./DAO/models/user.model.js";
 import { prodModel } from "./DAO/models/prods.model.js";
+import { cartModel } from "./DAO/models/cart.model.js";
+
+const enviroment = async()=>{
+ await mongoose.connect("mongodb+srv://gjohn:JOHNhpxd@coderback.huvf7ed.mongodb.net/?retryWrites=true&w=majority");
+}
+enviroment();
 
 import mongoose from "mongoose";
 
 
 const app = express();
-mongoose.connect("mongodb+srv://gjohn:JOHNhpxd@coderback.huvf7ed.mongodb.net/?retryWrites=true&w=majority")
 
-
-const PORT = 8080;
 
 const httpserver = app.listen(8080, () =>
   console.log("Server running on port: 8080")
@@ -51,15 +54,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 //Routes
-app.use("/users", userRouter)
 
 app.use("/home", homeRouter)
-
 app.use("/realtimeproducts", realTimeProdsRouter);
 
-app.use("/api/products", productsRouter);
 
-app.use("/api/carts", cartsRouter);
+//NOW USING
+app.use("/users", userRouter)
+app.use("/products", productsRouter);
+app.use("/carts", cartsRouter);
 
 app.get("*", (req, res) => {
   return res

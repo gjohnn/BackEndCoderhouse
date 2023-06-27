@@ -1,23 +1,17 @@
-
-  <h3>{{this.namePage}}</h3>
-  <div>
-  <h4>Precios</h4>
-  <button type="button" class="btn btn-light" id="ascBtn" >⇧</button>
-  <button type="button" class="btn btn-light" id="descBtn"> ⇩</button>
-
-  </div>
+  <h3>{{this.titlePage}}</h3>
 <div class="container d-flex flex-wrap ">
   {{#each prods}}
     <div class="m-4 border border-light p-1 ">
-      <li>Id: {{this._id}}</li>
-      <li>Title: {{this.title}}</li>
+      
+      <li> Title: {{this.title}}</li>
       <li>Description: {{this.description}}</li>
       <li>Price: {{this.price}}</li>
       <li>Thumbnail: {{this.thumbnail}}</li>
-      <li>Code: {{this.code}}</li>
+      
       <li>Stock: {{this.stock}}</li>
       <li>Status: {{this.status}}</li>
       <li>Category: {{this.category}}</li>
+<button type="button" class="btn btn-success container">Añadir al carrito</button>
 
     </div>
     <hr />

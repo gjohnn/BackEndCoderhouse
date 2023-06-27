@@ -15,6 +15,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
+    index: true,
+  },
+  carts: {
+    type: [
+      {
+        cart: {
+          type: mongoose.Schema.Types.ObjectID,
+          ref: "carts",
+        },
+      },
+    ],
+    default: [],
   },
 });
 

@@ -3,20 +3,19 @@ import mongoose from "mongoose";
 const cartCol = "carts";
 
 const cartSchema = new mongoose.Schema({
-    first_name:{
-        type: String,
-        required: true
-    },
-    last_name:{
-        type: String,
-        required: true
-    },
-    email:{
-        type: String,
-        unique:true,
-        required:true
-    },
-    products:[]
-})
+  idUser: {
+    type: mongoose.Schema.Types.ObjectID
+  },
+  products: {
+    type: [
+      {
+        prod: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "products"
+        },
+      },
+    ],
+  },
+});
 
-export const cartModel = mongoose.model(cartCol,cartSchema);
+export const cartModel = mongoose.model(cartCol, cartSchema);

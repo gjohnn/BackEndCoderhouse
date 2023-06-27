@@ -1,35 +1,35 @@
-<main class="container">
-<h3 class="text-2xl text-center font-bold mb-4 block">Para trabajar con Socket</h3>
+<main class="container text-black">
+<h3 class="text-2xl text-center font-bold mb-4 block text-light">Socket Test</h3>
 <div>
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {{!-- Crear --}}
         <div class="bg-white rounded-lg shadow p-4">
             <form id="productForm">
                 <fieldset>
-                    <legend class="text-lg font-bold">Agregar producto nuevo</legend>
+                    <legend class="text-lg font-bold">Add new product</legend>
 
                     <div class="my-2">
-                        <label class="font-bold" for="title">Título:</label>
+                        <label class="font-bold" for="title">Title:</label>
                         <input type="text" id="title" name="title" required class="border border-gray-300 rounded-md px-2 py-1"/>
                     </div>
 
                     <div class="my-2">
-                        <label class="font-bold" for="description">Descripción:</label>
+                        <label class="font-bold" for="description">Description:</label>
                         <textarea id="description" name="description" required class="border border-gray-300 rounded-md px-2 py-1"></textarea>
                     </div>
 
                     <div class="my-2">
-                        <label class="font-bold" for="price">Precio:</label>
+                        <label class="font-bold" for="price">Price:</label>
                         <input type="number" id="price" name="price" required class="border border-gray-300 rounded-md px-2 py-1" />
                     </div>
 
                     <div class="my-2">
-                        <label class="font-bold" for="code">Código:</label>
+                        <label class="font-bold" for="code">Code::</label>
                         <input type="text" id="code" name="code" required class="border border-gray-300 rounded-md px-2 py-1" />
                     </div>
 
                     <div class="my-2">
-                        <label class="font-bold" for="thumbnail">Imagen:</label>
+                        <label class="font-bold" for="thumbnail">Image(File):</label>
                         <input type="file" name="file" id="thumbnail" required class="border border-gray-300 rounded-md px-2 py-1" />
                     </div>
 
@@ -39,20 +39,20 @@
                     </div>
 
                     <div class="my-2">
-                        <label class="font-bold" for="category">Categoría:</label>
+                        <label class="font-bold" for="category">Category:</label>
                         <input type="text" id="category" name="category" required class="border border-gray-300 rounded-md px-2 py-1" />
                     </div>
 
                     <div class="my-2">
-                        <label class="font-bold" for="status">Estado:</label>
+                        <label class="font-bold" for="status">Status:</label>
                         <select id="status" name="status" required class="border border-gray-300 rounded-md px-2 py-1 black">
-                            <option value="available">Disponible</option>
-                            <option value="out_of_stock">Agotado</option>
+                            <option value="available">Available</option>
+                            <option value="out_of_stock">Unavailable</option>
                         </select>
                     </div>
 
                     <div class="my-2">
-                        <button type="submit" id="createProductButton" class="bg-green-500 text-white rounded-md px-4 py-2 btn btn-success">Crear Producto</button>
+                        <button type="submit" id="createProductButton" class="bg-green-500 text-white rounded-md px-4 py-2 btn btn-success">Add</button>
                     </div>
                 </fieldset>
             </form>
@@ -61,14 +61,14 @@
         <div class="bg-white rounded-lg shadow p-4">
             <form id="deleteProdForm">
                 <fieldset>
-                    <legend class="text-lg font-bold">Eliminar un producto por ID</legend>
+                    <legend class="text-lg font-bold">Delete product by ID</legend>
 
                     <div class="my-2">
-                        <label class="font-bold" for="title">ID del producto a eliminar:</label>
+                        <label class="font-bold" for="title">Product ID:</label>
                         <input type="text" id="pid" name="title" required class="border border-gray-300 rounded-md px-2 py-1"/>
                     </div>
                     <div class="my-2">
-                        <button type="submit" id="deleteProductButton" class="bg-red-500 text-white rounded-md px-4 py-2 btn btn-danger">Eliminar Producto</button>
+                        <button type="submit" id="deleteProductButton" class="bg-red-500 text-white rounded-md px-4 py-2 btn btn-danger">Delete</button>
                     </div>
                 </fieldset>
         </div>
@@ -80,6 +80,28 @@
     </div>
 </div>
 </main>
+
+
+  <h3>{{this.title}}</h3>
+<div class="container d-flex flex-wrap ">
+  {{#each prods}}
+    <div class="m-4 border border-light p-1 ">
+      <li>Id: {{this._id}}</li>
+      <li> Title: {{this.title}}</li>
+      <li>Description: {{this.description}}</li>
+      <li>Price: {{this.price}}</li>
+      <li>Thumbnail: {{this.thumbnail}}</li>
+      <li>Code: {{this.code}}</li>
+      <li>Stock: {{this.stock}}</li>
+      <li>Status: {{this.status}}</li>
+      <li>Category: {{this.category}}</li>
+<button type="button" class="btn btn-success container">Añadir al carrito</button>
+
+    </div>
+    <hr />
+
+  {{/each}}
+</div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/testing-sockets.js"></script>

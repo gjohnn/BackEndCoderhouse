@@ -8,7 +8,7 @@ class UserManager{
     async getAllUsers(){
         let users;
     try{
-        users = await userModel.find();
+        users = await userModel.find().lean();
     }catch(error){
         console.log(error);
     }
