@@ -1,6 +1,6 @@
-import { userModel } from "./models/user.model.js";
+import { userModel } from "../DAO/models/user.model.js";
 
-class UserManager{
+class userManager{
     constructor(){
         this.model = userModel
     }
@@ -48,4 +48,4 @@ class UserManager{
     }
 }
 
-export default UserManager;
+export const userService = new userManager();

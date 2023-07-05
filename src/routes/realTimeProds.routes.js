@@ -1,16 +1,14 @@
 import express from "express";
 import mongoose from "mongoose";
-import ProductManager from "../DAO/prodsDAO.js";
+import { prodService } from "../services/prods.service.js";
 import { upload } from "../DAO/oldFunctions.js";
 
 export const realTimeProdsRouter = express.Router();
 
-const prodManager = new ProductManager();
-
 realTimeProdsRouter.get("/", async (req, res) => {
   let prods;
   try {
-    prods = await prodManager.getAllProds()
+    prods = await prodService.getAllProds()
     const title = "Product list";
     return res.status(200).render("realTimeProducts", {prods, title });
   } catch (error) {

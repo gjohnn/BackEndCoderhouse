@@ -25,9 +25,10 @@ import mongoose from "mongoose";
 
 const app = express();
 
+const PORT = 8080;
 
-const httpserver = app.listen(8080, () =>
-  console.log("Server running on port: 8080")
+const httpserver = app.listen(PORT, () =>
+  console.log(`Server running on port: 7070`)
 );
 
 const socketServer = new Server(httpserver)
@@ -66,7 +67,6 @@ app.use("/carts", cartsRouter);
 
 app.get("*", (req, res) => {
   return res
-    .status(404)
-    .json({ status: "error", msg: "No se encuentra esa ruta", data: {} });
+    .status(404).send("Página no encontrada! | Page not found!");
 });
 

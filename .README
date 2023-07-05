@@ -1,16 +1,4 @@
 npm init -y
 
-npm i express
-
-npm i express-handlebars 
-
-npm i express-handlebars socket.io
-
-npm i express-handlebars handlebars
-
-npm i mongoose
-
-npm i multer
-
-npm i nodemon -g
+npm i express && npm i express-handlebars && npm i express-handlebars socket.io && npm i express-handlebars handlebars && npm i mongoose && npm i multer && npm i nodemon -g
 

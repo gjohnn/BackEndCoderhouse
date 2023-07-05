@@ -1,15 +1,13 @@
 import { Router } from "express";
 import { userModel } from "../DAO/models/user.model.js";
-import UserManager from "../DAO/userDAO.js";
+import { userService } from "../services/users.service.js";
 
 const userRouter = Router();
-
-const userManager = new UserManager();
 
 userRouter.get("/", async (req, res) => {
   let users;
   try {
-    users = await userManager.getAllUsers();
+    users = await userService.getAllUsers();
     const titlePage = "Users list";
     console.log(users);
     res.status(200).render("users", { titlePage, users });
@@ -26,7 +24,7 @@ userRouter.post("/", async (req, res) => {
     return res.send({ status: "error", error: "Incomplete values" });
   }
   try {
-    response = await userManager.addUser(first_name, last_name, email);
+    response = await userService.addUser(first_name, last_name, email);
   } catch (error) {
     res.status(500).send({ status: "error", error: "Something is missing" });
   }
@@ -37,7 +35,7 @@ userRouter.get("/:userid", async (req, res) => {
   let userId = req.params.userid;
   let user;
   try {
-    user = await userManager.getUserById(userId);
+    user = await userService.getUserById(userId);
     if (user) {
       res.send({ status: "success", payload: { user } });
     } else {
@@ -59,7 +57,7 @@ userRouter.put("/:userId", async (req, res) => {
   let updatedUser;
 
   try {
-    updatedUser = await userManager.updateUser(userId, {
+    updatedUser = await userService.updateUser(userId, {
       first_name,
       last_name,
       email,
