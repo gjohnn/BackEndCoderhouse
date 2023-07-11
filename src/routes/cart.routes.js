@@ -6,14 +6,9 @@ export const cartsRouter = express.Router();
 
 cartsRouter.get("/", async (req, res) => {
   try {
-    let allCarts = await cartService.getAllCarts()
-    return res
-      .status(200).
-      json({
-        status: "success",
-        msg: 'products in cart',
-        payload: allCarts
-      })
+    let allCarts = await cartService.getAllCarts(req)
+    
+    return res.status(200).json({status: "success",msg: 'carts',payload: allCarts})
   }
   catch (error) {
     console.log(error)
@@ -26,6 +21,7 @@ cartsRouter.get("/:cid", async (req, res) => {
   try {
     const cid = req.params.cid;
     const carts = await cartService.findOne(cid);
+    
 
     if (carts) {
       return res.status(200).render("carts", { carts });
@@ -63,7 +59,6 @@ cartsRouter.post('/:cid/product/:pid', async (req,res)=>{
       const cid = req.params.cid
       const pid = req.params.pid
       const productById= await prodService.findOne(pid)
-      const cartFinder = await cartService.findOne(cid)
 
       if (productById.stock > 0) {
           const createdProduct = await cartService.createProd({cid,pid})

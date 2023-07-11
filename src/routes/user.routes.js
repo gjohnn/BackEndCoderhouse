@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { userModel } from "../DAO/models/user.model.js";
 import { userService } from "../services/users.service.js";
+import { cartService } from "../services/carts.service.js";
 
 const userRouter = Router();
 
@@ -12,9 +13,9 @@ userRouter.get("/", async (req, res) => {
     console.log(users);
     res.status(200).render("users", { titlePage, users });
   } catch {
-    res.status(404).send({ status: "error", error:"wtf" });
+    res.status(404).send({ status: "error", error: "wtf" });
   }
-  
+
 });
 
 userRouter.post("/", async (req, res) => {
@@ -45,6 +46,28 @@ userRouter.get("/:userid", async (req, res) => {
     res.status(404).send({ status: "error", error });
   }
 });
+
+userRouter.post("/:uid/cart/:cid", async (req, res) => {
+
+  try {
+    let uid = req.params.uid;
+    let cid = req.params.cid;
+    let cart = await cartService.findOne(cid);
+    if (cart) {
+      console.log(cart);
+      const cartToUser = await userModel.addCartToUser(uid,cid)
+      if (cartToUser) {
+        return res.send({ status: "success", payload: { cartToUser } });
+      }
+    } else {
+      return res.send({ status: "success", payload: "Cant add cart to user" });
+    }
+  } catch (error) {
+    return res.status(404).send({ status: "error", payload: "nop!" });
+  }
+});
+
+
 
 userRouter.put("/:userId", async (req, res) => {
   let userId = req.params.userId;

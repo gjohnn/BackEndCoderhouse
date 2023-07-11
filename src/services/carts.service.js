@@ -1,15 +1,53 @@
 import { cartModel } from "../DAO/models/cart.model.js";
 import { prodModel } from "../DAO/models/prods.model.js";
+import {parse} from "url";
 
 class CartManager {
   constructor() {
     this.model = cartModel;
   }
 
-  async getAllCarts() {
+  async getAllCarts(req) {
     try {
-      let carts = cartModel.find();
-      return carts;
+      let query = cartModel.find({}, { path: false, __v: false, });
+      
+      const pages = await cartModel.paginate(query);
+      const { docs, totalPages, page, hasPrevPage, hasNextPage, prevPage, nextPage } = pages;
+
+      const currentLink = `${req.protocol}://${req.get('host')}${req.originalUrl}`
+
+      const response = {
+        status: "success",
+        payload: docs,
+        totalPages,
+        prevPage,
+        nextPage,
+        page,
+        hasPrevPage,
+        hasNextPage,
+        prevLink: hasPrevPage ? getPrevLink(currentLink, prevPage) : null,
+        nextLink: hasNextPage ? getNextLink(currentLink, nextPage) : null,
+      };
+
+      return response;
+
+      function getPrevLink(currentLink, prevPage) {
+        const parsedUrl = parse(currentLink, true);
+        const searchParams = new URLSearchParams(parsedUrl.search);
+        searchParams.set('page', prevPage);
+        const updatedLink = `${parsedUrl.pathname}?${searchParams.toString()}`;
+        return `${req.protocol}://${req.get('host')}${updatedLink}`
+      }
+
+      function getNextLink(currentLink, nextPage) {
+        const parsedUrl = parse(currentLink, true);
+        const searchParams = new URLSearchParams(parsedUrl.search);
+        searchParams.set('page', nextPage);
+        const updatedLink = `${parsedUrl.pathname}?${searchParams.toString()}`;
+        return `${req.protocol}://${req.get('host')}${updatedLink}`
+      }
+      /*
+      let carts = cartModel.find();*/
     } catch (error) {
       console.log(error);
     }
@@ -26,7 +64,6 @@ class CartManager {
   async createProd({ cid, pid }) {
     try {
       const findProdInCart = await cartModel.findOne({ _id: cid, products: { $elemMatch: { pid: pid } } });
-      console.log(findProdInCart);
       if (findProdInCart) {
         const productToUpdate = findProdInCart.products.find(product => product.pid.equals(pid));
 

@@ -21,6 +21,7 @@ const enviroment = async()=>{
 enviroment();
 
 import mongoose from "mongoose";
+import { viewsRouter } from "./routes/views.router.js";
 
 
 const app = express();
@@ -46,9 +47,6 @@ app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
-app.get("/", (req, res) => {
-  res.send("Hola!");
-});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -61,12 +59,12 @@ app.use("/realtimeproducts", realTimeProdsRouter);
 
 
 //NOW USING
-app.use("/users", userRouter)
-app.use("/products", productsRouter);
-app.use("/carts", cartsRouter);
+app.use("/api/users", userRouter)
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
+app.use("/",viewsRouter)
 
 app.get("*", (req, res) => {
-  return res
-    .status(404).send("Página no encontrada! | Page not found!");
+  return res.status(404).send("Página no encontrada! | Page not found!");
 });
 

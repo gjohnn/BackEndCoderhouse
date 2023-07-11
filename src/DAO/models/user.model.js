@@ -1,15 +1,14 @@
 import mongoose from "mongoose";
 import { Schema, model } from "mongoose"
+import mongoosePaginate from "mongoose-paginate-v2";
 
-const userCol = "usuarios";
-
-const cartSchema = new Schema(
+const cartSchema = new mongoose.Schema(
   {
-  cid: { type: Schema.Types.ObjectId, ref: 'cart', required: true, index: true },
-  quantity: { type: Number, required: true },
+  cid: { type: Schema.Types.ObjectId, ref: 'carts', required: true, index: true },
 },
   { _id: false }
 )
+
 const userSchema = new mongoose.Schema({
   first_name: {
     type: String,
@@ -41,4 +40,6 @@ userSchema.pre('find', function () {
   this.populate('carts.cid');
 });
 
-export const userModel = mongoose.model(userCol, userSchema);
+userSchema.plugin(mongoosePaginate)
+
+export const userModel = mongoose.model("usuarios", userSchema);

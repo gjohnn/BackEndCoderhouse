@@ -1,21 +1,23 @@
 
   <h3>{{this.msg}}</h3>
-  <div>
-  <h4>Precios</h4>
-  <button type="button" class="btn btn-light" id="ascBtn" >⇧</button>
-  <button type="button" class="btn btn-light" id="descBtn"> ⇩</button>
-
-  </div>
-<div class="container d-flex flex-wrap ">
+  
   {{#each payload}}
+<div class="container d-flex flex-wrap ">
     <div class="m-4 border border-light p-1 ">
       <li>Id: {{this._id}}</li>
       <li>Name: {{this.first_name}}</li>
       <li>Last Name: {{this.last_name}}</li>
       <li>Email: {{this.email}}</li>
-      <li>Carts: {{this.carts}}</li>
+      <li>Carts: 
+        {{#each this.carts}}
+        <li>
+            {{this}}
+        </li>
+        {{/each}}
+
+      </li>
     </div>
     <hr />
 
-  {{/each}}
 </div>
+  {{/each}}
