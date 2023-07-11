@@ -1,5 +1,5 @@
 import { userModel } from "../DAO/models/user.model.js";
-import { cartService } from "./carts.service.js";
+import { cartModel } from "../DAO/models/cart.model.js"
 
 class userManager {
     constructor() {
@@ -83,29 +83,51 @@ class userManager {
         return user;
     }
 
+    async addCartToUser( {uid, cid} ) {
+        try {
+          const findProdInCart = await userModel.findOne({ _id: uid}, {carts:{ _id:cid }});
+          if (findProdInCart) {
+            const productToUpdate = findProdInCart.carts.find(e => e.cid.equals(cid));
+    
+            if (productToUpdate) {
+              await userModel.updateOne({ _id: cid, "carts.pid": pid } )
+            }
+          } else {
+            await userModel.findOneAndUpdate(
+              { _id: cid }, { $push: { carts: { cid: pid } } }
+            );
+          }
+          const cartToUpdate = await userModel.findOne({ _id: cid });
+          return cartToUpdate;
+        } catch (error) {
+          console.error('Error updating cart:', error);
+          throw error;
+        }
+      }
+
     async addCartToUser({uid, cid}) {
 
         try {
-            let findUser = await userModel.findOne({ _id: uid })
-            console.log(findUser);
-            if (findUser) {
-                const userToUpdate = findUser.carts.find(cart => cart.cid.equals(cid))
-                if (userToUpdate) {
-                    console.log("El carrito ya pertenece al usuario");
-                } else {
-                    await userModel.findOneAndUpdate(
-                        { _id: uid }, { $push: { carts: { pid: pid } } }
-                    );
+            console.log(uid);
+            let userFound = await userModel.findOne({_id:`64adc2d0b32b69d01ef590f2`}, {__v:false})
+            console.log(userFound);
+            const findCartInUser = await userModel.findOne({ _id: uid, carts: { $elemMatch: { uid: uid } } });
+            if (findCartInUser) {
+                const productToUpdate = findCartInUser.carts.find(e => e.uid.equals(uid));
+
+                if (productToUpdate) {
+                    await userModel.updateOne({ _id: uid, "carts.cid": cid })
                 }
-
             } else {
-                console.log("user not found!");
+                await userModel.findOneAndUpdate(
+                    { _id: uid }, { $push: { carts: { cid: cid } } }
+                );
             }
-            const updatedUser = await userModel.findOne({ _id: uid });
-            return updatedUser;
-
+            const userToUpdate = await userModel.findOne({ _id: uid });
+            return userToUpdate;
         } catch (error) {
-            console.log(error);
+            console.error('Error updating cart:', error);
+            throw error;
         }
     }
 }

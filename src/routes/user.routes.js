@@ -47,15 +47,17 @@ userRouter.get("/:userid", async (req, res) => {
   }
 });
 
+
 userRouter.post("/:uid/cart/:cid", async (req, res) => {
 
   try {
     let uid = req.params.uid;
+    console.log(uid);
     let cid = req.params.cid;
+    console.log(cid);
     let cart = await cartService.findOne(cid);
     if (cart) {
-      console.log(cart);
-      const cartToUser = await userModel.addCartToUser(uid,cid)
+      const cartToUser = await userService.addCartToUser({uid,cid})
       if (cartToUser) {
         return res.send({ status: "success", payload: { cartToUser } });
       }
