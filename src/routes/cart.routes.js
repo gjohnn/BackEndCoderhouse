@@ -25,16 +25,12 @@ cartsRouter.get("/", async (req, res) => {
 cartsRouter.get("/:cid", async (req, res) => {
   try {
     const cid = req.params.cid;
-    const cartFound = await cartService.findOne(cid);
+    const carts = await cartService.findOne(cid);
 
-    if (cartFound) {
-      return res
-        .status(200)
-        .json({ status: "success", msg: 'cart found', payload: cartFound });
+    if (carts) {
+      return res.status(200).render("carts", { carts });
     } else {
-      return res
-        .status(400)
-        .json({ status: "error", msg: 'The indicated cart was not found' });
+      return res.status(400).json({ status: "error", msg: 'The indicated cart was not found' });
     }
   } catch (error) {
     console.log(error);

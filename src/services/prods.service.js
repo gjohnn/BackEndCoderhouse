@@ -1,43 +1,78 @@
 import { prodModel } from "../DAO/models/prods.model.js";
+import { parse } from "url"
 
 class ProductManager {
   constructor() {
     this.model = prodModel;
   }
 
-  async getAllProds(limit, page, query, sort) {
+  async getAllProds(req, limit, sort, numberPage, category, stock) {
+
     try {
-      let prods = prodModel.find();
-      
-      if (sort=="asc"){
-        prods =  prods.sort({"price":1});
-      }else if(sort=="desc"){
-        prods =  prods.sort({"price":-1});
-      }
-      
-      if(limit){
-        prods =  prods.limit(parseInt(limit, 10));
-      }else{
-        limit = 10;
-        prods =  prods.limit(parseInt(limit, 10));
+      let query = prodModel.find({}, { path: false, __v: false, });
+
+      if (sort) {
+        query = query.sort({ "price": sort })
       }
 
-      if(query){
-        prods =  prods.find({"title":query});
+      if (category) {
+        query = query.find({ "category": category });
+      } else if (stock) {
+        query = query.find({ "stock": stock });
       }
-      prods = await prods.lean();
-      return prods;
+
+
+      const pages = await prodModel.paginate(query, { "limit": limit, page: numberPage || 1 });
+
+
+      const { docs, totalPages, page, hasPrevPage, hasNextPage, prevPage, nextPage } = pages;
+
+      const currentLink = `${req.protocol}://${req.get('host')}${req.originalUrl}`
+
+      const response = {
+        status: "success",
+        payload: docs,
+        totalPages,
+        prevPage,
+        nextPage,
+        page,
+        hasPrevPage,
+        hasNextPage,
+        prevLink: hasPrevPage ? getPrevLink(currentLink, prevPage) : null,
+        nextLink: hasNextPage ? getNextLink(currentLink, nextPage) : null,
+      };
+
+
+
+
+
+      return response;
+
+      function getPrevLink(currentLink, prevPage) {
+        const parsedUrl = parse(currentLink, true);
+        const searchParams = new URLSearchParams(parsedUrl.search);
+        searchParams.set('page', prevPage);
+        const updatedLink = `${parsedUrl.pathname}?${searchParams.toString()}`;
+        return `${req.protocol}://${req.get('host')}${updatedLink}`
+      }
+
+      function getNextLink(currentLink, nextPage) {
+        const parsedUrl = parse(currentLink, true);
+        const searchParams = new URLSearchParams(parsedUrl.search);
+        searchParams.set('page', nextPage);
+        const updatedLink = `${parsedUrl.pathname}?${searchParams.toString()}`;
+        return `${req.protocol}://${req.get('host')}${updatedLink}`
+      }
     } catch (error) {
       console.log(error);
     }
-    return prods;
   }
 
   async findOne(id) {
     let prod;
     try {
       prod = await prodModel.findOne({ _id: id });
-      return prod
+      return prod;
     } catch (error) {
       console.log(error);
     }

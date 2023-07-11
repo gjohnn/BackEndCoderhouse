@@ -1,9 +1,10 @@
-  <h3>Productos</h3>
+  <h3>Products</h3>
 <div class="container d-flex flex-wrap ">
-  {{#each prods}}
+  {{#each payload}}
+  
     <div class="m-4 border border-light p-1 ">
       
-      <li class="text-uppercase" > Title: {{this.title}}</pre></li>
+      <li class="text-uppercase" > Title: {{this.title}}</li>
       <li>Description: {{this.description}}</li>
       <li>Price: {{this.price}}</li>
       <li>Thumbnail: {{this.thumbnail}}</li>
@@ -11,7 +12,7 @@
       <li>Stock: {{this.stock}}</li>
       <li>Status: {{this.status}}</li>
       <li>Category: {{this.category}}</li>
-<button type="button" class="btn btn-success container">Ver</button>
+<button type="button" class="btn btn-success container">Add to cart</button>
 
     </div>
     <hr />

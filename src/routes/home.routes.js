@@ -8,8 +8,7 @@ export const homeRouter = express.Router();
 homeRouter.get("/", async (req, res) => {
   try {
     let prods = await prodService.getAllProds();
-    const namePage = "Products list";
-    return res.status(200).render("home", {namePage, prods});
+    return res.status(200).render("home", { prods });
   } catch (error) {
     return res
       .status(500)
