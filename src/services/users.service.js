@@ -52,20 +52,30 @@ class userManager {
     }
 
     async getUserById(id) {
-        let user;
         try {
-            user = await userModel.findOne({ _id: id });
+            let user = await userModel.findOne({ _id: id });
+            return user;
         } catch (error) {
             console.log(error);
         }
-        return user;
+       
+    }
+    async getUserByEmail(email) {
+        try {
+            let user = await userModel.findOne({ email: email }, { __v: false }, { _id: false }).lean();
+            
+            return user;
+        } catch (error) {
+            console.log(error);
+        }
+
     }
 
-    async addUser(first_name, last_name, email) {
-        let user;
+    async addUser(user) {
+        const { first_name, last_name, email, password } = user
         try {
             user = await userModel.create({
-                first_name, last_name, email, carts: []
+                first_name, last_name, email, password, carts: []
             });
         } catch (error) {
             console.log(error);
@@ -83,33 +93,33 @@ class userManager {
         return user;
     }
 
-    async addCartToUser( {uid, cid} ) {
+    async addCartToUser({ uid, cid }) {
         try {
-          const findProdInCart = await userModel.findOne({ _id: uid}, {carts:{ _id:cid }});
-          if (findProdInCart) {
-            const productToUpdate = findProdInCart.carts.find(e => e.cid.equals(cid));
-    
-            if (productToUpdate) {
-              await userModel.updateOne({ _id: cid, "carts.pid": pid } )
-            }
-          } else {
-            await userModel.findOneAndUpdate(
-              { _id: cid }, { $push: { carts: { cid: pid } } }
-            );
-          }
-          const cartToUpdate = await userModel.findOne({ _id: cid });
-          return cartToUpdate;
-        } catch (error) {
-          console.error('Error updating cart:', error);
-          throw error;
-        }
-      }
+            const findProdInCart = await userModel.findOne({ _id: uid }, { carts: { _id: cid } });
+            if (findProdInCart) {
+                const productToUpdate = findProdInCart.carts.find(e => e.cid.equals(cid));
 
-    async addCartToUser({uid, cid}) {
+                if (productToUpdate) {
+                    await userModel.updateOne({ _id: cid, "carts.pid": pid })
+                }
+            } else {
+                await userModel.findOneAndUpdate(
+                    { _id: cid }, { $push: { carts: { cid: pid } } }
+                );
+            }
+            const cartToUpdate = await userModel.findOne({ _id: cid });
+            return cartToUpdate;
+        } catch (error) {
+            console.error('Error updating cart:', error);
+            throw error;
+        }
+    }
+
+    async addCartToUser({ uid, cid }) {
 
         try {
             console.log(uid);
-            let userFound = await userModel.findOne({_id:`64adc2d0b32b69d01ef590f2`}, {__v:false})
+            let userFound = await userModel.findOne({ _id: `${uid}` }, { __v: false })
             console.log(userFound);
             const findCartInUser = await userModel.findOne({ _id: uid, carts: { $elemMatch: { uid: uid } } });
             if (findCartInUser) {

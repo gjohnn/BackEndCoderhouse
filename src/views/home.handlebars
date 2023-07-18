@@ -1,13 +1,25 @@
+<h3>Bienvenido/a,
+  {{#if validateUser.first_name}}
+  {{validateUser.first_name}}
+  {{else}}
+  {{validateUser.email}}
+  {{/if}}
+  , {{user}}</h3>
 
-  <h3>{{this.msg}}</h3>
-  
-
- 
-<div class="container d-flex flex-wrap ">
-  {{#each prods}}
-
-  {{/each}}
+<div class="bg-success container d-flex justify-content-center align-items-center">
+  {{#if validateUser.carts}}
+  <div>{{validateUser.carts}}</div>
+  {{else}}
+  <div>There are no carts</div>
+  {{/if}}
 </div>
+
+<div class="bg-warning container d-flex justify-content-center align-items-center">
+  <button class="btn btn-danger" id="btnLogout" onclick="location.href = '/api/session/logout'">Logout</button>
+</div>
+
+
+
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/testing-sockets.js"></script>

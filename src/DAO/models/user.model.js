@@ -4,8 +4,8 @@ import mongoosePaginate from "mongoose-paginate-v2";
 
 const cartSchema = new mongoose.Schema(
   {
-  cid: { type: Schema.Types.ObjectId, ref: 'carts', required: true, index: true },
-},
+    cid: { type: Schema.Types.ObjectId, ref: 'carts', required: true, index: true },
+  },
   { _id: false }
 )
 
@@ -24,6 +24,11 @@ const userSchema = new mongoose.Schema({
     required: true,
     index: true,
   },
+  password: {
+    type: String,
+    required:true,
+    index:true
+  },
   carts: {
     type: [cartSchema],
     default: [],
@@ -33,7 +38,7 @@ const userSchema = new mongoose.Schema({
 
 
 userSchema.pre('findOne', function () {
-  this.populate('carts.cid'); 
+  this.populate('carts.cid');
 });
 
 userSchema.pre('find', function () {
