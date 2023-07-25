@@ -31,6 +31,11 @@ import { userModel } from "./DAO/models/user.model.js";
 import { prodModel } from "./DAO/models/prods.model.js";
 import { cartModel } from "./DAO/models/cart.model.js";
 
+//jwt
+
+import { generateToken } from "./utils/jwt.js";
+import { authToken } from "./utils/jwt.js";
+
 
 
 const enviroment = async () => {

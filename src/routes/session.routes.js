@@ -118,6 +118,13 @@ sessionRouter.get('/logout', async (req, res) => {
     })
 })
 
+sessionRouter.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => {})
+
+sessionRouter.get('/githubcallback', passport.authenticate('github', { failureRedirect: "/login" }), async (req, res) => {
+    req.session.user = req.user;
+    res.redirect('/')
+})
+
 /*
 
 if(user.email == "adminCoder@coder.com" && user.password == adminCod3r123){

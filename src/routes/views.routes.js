@@ -7,10 +7,8 @@ import { prodService } from '../services/prods.service.js';
 export const viewsRouter = Router();
 viewsRouter.get('/', async (req, res) => {
     try{
-        let msg = "Working :)"
-        console.log(req.session.user);
-        let validateUser = await userService.getUserByEmail(req.session.user)
-        return res.status(404).render("home",{validateUser, user:req.session.user})
+        let validateUser = req.session.user
+        return res.status(404).render("home",{validateUser})
     }catch(error){
         let msg = "Something went wrong!"
         return res.status(404).render("errorPage",{msg})

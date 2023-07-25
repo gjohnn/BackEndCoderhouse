@@ -1,11 +1,45 @@
 import passport from "passport";
 import local from 'passport-local'
+import GithubStrategy from 'passport-github2'
 import { userService } from '../services/users.service.js'
 import { createHash, isValidPassword } from "../utils/moreUtils.js";
-
+import { generateToken, authToken } from "../utils/jwt.js";
 const LocalStrategy = local.Strategy;
 
+
 const initializePassport = () => {
+
+
+
+    passport.use('github', new GithubStrategy({
+        clientID: 'Iv1.316f172c464ac39b',
+        clientSecret: "d23adf7dd0506ed9049ab1671e8cabbe888ff185",
+        callbackURL: 'http://localhost:8080/api/session/githubcallback',
+        scope: ['user:email']
+
+    }, async (accessToken, refreshToken, profile, done) => {
+        try {
+            let userEmail = profile.emails[0].value;
+            let user = await userService.getUserByEmail(userEmail)
+            if (!user) {
+                let newUser = {
+                    first_name: profile._json.login,
+                    last_name: 'a',
+                    email: userEmail,
+                    password: 'a',
+                }
+                let { first_name, last_name, email, password } = newUser;
+                let result = await userService.addUser({ first_name, last_name, email, password })
+                done(null, result)
+            } else {
+                done(null, user)
+            }
+        } catch (error) {
+            console.log(error);
+            done(error)
+        }
+    }))
+
     passport.use('register', new LocalStrategy({
         passReqToCallback: true, usernameField: 'email'
     }, async (req, username, password, done) => {
@@ -30,15 +64,7 @@ const initializePassport = () => {
         } catch (error) {
             console.log(error);
         }
-
-    }))
-
-
-
-
-
-
-
+     } ))
 
 
 
@@ -50,5 +76,22 @@ const initializePassport = () => {
         done(null, user);
     })
 }
+/*
 
+const initializePassport = () => {
+    
+    }))
+
+
+
+
+
+
+
+
+
+
+    
+}
+*/
 export default initializePassport;
