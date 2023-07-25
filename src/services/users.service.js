@@ -53,7 +53,7 @@ class userManager {
 
     async getUserById(id) {
         try {
-            let user = await userModel.findOne({ _id: id });
+            let user = await userModel.findOne({ _id: id },{ __v: false }).lean();
             return user;
         } catch (error) {
             console.log(error);
@@ -62,8 +62,7 @@ class userManager {
     }
     async getUserByEmail(email) {
         try {
-            let user = await userModel.findOne({ email: email }, { __v: false }, { _id: false }).lean();
-            
+            let user = await userModel.findOne({ email: email }, { __v: false }).lean();
             return user;
         } catch (error) {
             console.log(error);
@@ -71,26 +70,35 @@ class userManager {
 
     }
 
-    async addUser(user) {
-        const { first_name, last_name, email, password } = user
+    async addUser({first_name, last_name, email, password}) {
         try {
-            user = await userModel.create({
+            let user = await userModel.create({
                 first_name, last_name, email, password, carts: []
             });
+            return user;
         } catch (error) {
             console.log(error);
         }
-        return user;
+        
     }
 
     async updateUser(userid, props) {
-        let user;
         try {
-            user = await userModel.updateOne({ _id: userid }, props)
+            let user = await userModel.updateOne({ _id: userid }, props)
+            return user;
         } catch (error) {
             console.log(error);
         }
-        return user;
+        
+    }
+
+    async updateUserPass(email,newPassword){
+        try{
+            let user = await userModel.updateOne({ email:email }, {$set:{password:newPassword}})
+            return user;
+        }catch(error){
+            console.log(error);
+        }
     }
 
     async addCartToUser({ uid, cid }) {
@@ -118,9 +126,7 @@ class userManager {
     async addCartToUser({ uid, cid }) {
 
         try {
-            console.log(uid);
             let userFound = await userModel.findOne({ _id: `${uid}` }, { __v: false })
-            console.log(userFound);
             const findCartInUser = await userModel.findOne({ _id: uid, carts: { $elemMatch: { uid: uid } } });
             if (findCartInUser) {
                 const productToUpdate = findCartInUser.carts.find(e => e.uid.equals(uid));

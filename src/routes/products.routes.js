@@ -18,7 +18,6 @@ productsRouter.get('/', async (req, res) => {
 
 
         const viewProd = await prodService.getAllProds(req, parsedLimit, sort, parsedPage, category, stock)
-        console.log(viewProd);
         let {payload} = viewProd
 
         payload =  payload.map((item) => {
@@ -50,7 +49,6 @@ productsRouter.get('/:pid', async (req, res) => {
         const pid = req.params.pid
         const prods = await prodService.findOne(pid)
         if (prods) {
-            console.log(prods);
             return res.status(201).render("products",{ prods })
         }
         else {

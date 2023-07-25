@@ -8,7 +8,9 @@ export const viewsRouter = Router();
 viewsRouter.get('/', async (req, res) => {
     try{
         let msg = "Working :)"
-        return res.status(404).render("home",{msg})
+        console.log(req.session.user);
+        let validateUser = await userService.getUserByEmail(req.session.user)
+        return res.status(404).render("home",{validateUser, user:req.session.user})
     }catch(error){
         let msg = "Something went wrong!"
         return res.status(404).render("errorPage",{msg})

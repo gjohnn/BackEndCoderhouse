@@ -1,9 +1,15 @@
 //BASE SETTINGS
 import express from "express";
 import session from 'express-session'
-import  FileStore  from "session-file-store";
+import FileStore from "session-file-store";
 import cookieParser from "cookie-parser";
 import MongoStore from "connect-mongo";
+//Passport
+
+import passport from "passport";
+import local from 'passport-local';
+import initializePassport from "./config/passport.config.js";
+
 
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
@@ -27,8 +33,8 @@ import { cartModel } from "./DAO/models/cart.model.js";
 
 
 
-const enviroment = async()=>{
- await mongoose.connect("mongodb+srv://gjohn:JOHNhpxd@coderback.huvf7ed.mongodb.net/test?retryWrites=true&w=majority");
+const enviroment = async () => {
+  await mongoose.connect("mongodb+srv://gjohn:JOHNhpxd@coderback.huvf7ed.mongodb.net/test?retryWrites=true&w=majority");
 }
 enviroment();
 
@@ -43,10 +49,10 @@ const httpserver = app.listen(PORT, () =>
 
 const socketServer = new Server(httpserver)
 
-socketServer.on('connection',(socket)=>{
-  socket.on('msg_front_back',(msg)=>{
-      console.log(msg);
-      socketServer.emit('msg_back_front', msg)
+socketServer.on('connection', (socket) => {
+  socket.on('msg_front_back', (msg) => {
+    console.log(msg);
+    socketServer.emit('msg_back_front', msg)
   })
 })
 
@@ -62,14 +68,18 @@ app.use(cookieParser())
 
 app.use(session({
   store: MongoStore.create({
-    mongoUrl:'mongodb+srv://gjohn:JOHNhpxd@coderback.huvf7ed.mongodb.net/session?retryWrites=true&w=majority', 
-    mongoOptions: {useNewUrlParser:true, useUnifiedTopology:true},
-    ttl:20
+    mongoUrl: 'mongodb+srv://gjohn:JOHNhpxd@coderback.huvf7ed.mongodb.net/session?retryWrites=true&w=majority',
+    mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+    ttl: 500
   }),
-  secret:"It's me, Mario!",
-  resave:false,
-  saveUninitialized:false
+  secret: "It's me, Mario!",
+  resave: false,
+  saveUninitialized: false
 }))
+
+initializePassport();
+app.use(passport.initialize())
+app.use(passport.session())
 
 /*
 app.get('/prueba', async (req,res)=>{
@@ -95,15 +105,15 @@ app.use("/realtimeproducts", realTimeProdsRouter);
 
 //NOW USING
 
-app.use('/api/session',sessionRouter)
+app.use('/api/session', sessionRouter)
 
 app.use("/api/users", userRouter)
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/",viewsRouter)
+app.use("/", viewsRouter)
 
 app.get("*", (req, res) => {
   let msg = "Page not found!"
-  return res.status(404).render('errorPage', {msg});
+  return res.status(404).render('errorPage', { msg });
 });
 

@@ -1,22 +1,72 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary ">
+  <div class="container">
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active text-light" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light" href="/products">Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light" href="/carts">Carts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light" href="/users">Users</a>
+        </li>
+
+      </ul>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          {{#if validateUser.first_name}}
+          {{validateUser.first_name}}
+          {{else}}
+          {{validateUser.email}}
+          {{/if}}
+        </button>
+        <ul class="dropdown-menu">
+          {{#if validateUser}}
+          <li><a class="dropdown-item" href="/api/session/profile">Profile</a></li>
+          {{else}}
+          <li><a class="dropdown-item" href="/api/session/login">Login</a></li>
+          {{/if}}
+          <li><button class="btn btn-danger" id="btnLogout"
+              onclick="location.href = '/api/session/logout'">Logout</button></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+{{#if validateUser}}
 <h3>Bienvenido/a,
   {{#if validateUser.first_name}}
   {{validateUser.first_name}}
   {{else}}
-  {{validateUser.email}}
-  {{/if}}
-  , {{user}}</h3>
+  {{validateUser.email}} {{validateUser}}
+  {{/if}}</h3>
 
 <div class="bg-success container d-flex justify-content-center align-items-center">
   {{#if validateUser.carts}}
+
   <div>{{validateUser.carts}}</div>
+
   {{else}}
   <div>There are no carts</div>
   {{/if}}
 </div>
 
-<div class="bg-warning container d-flex justify-content-center align-items-center">
-  <button class="btn btn-danger" id="btnLogout" onclick="location.href = '/api/session/logout'">Logout</button>
-</div>
+{{/if}}
+
+{{#each prods}}
+<li>{{this}}</li>
+{{/each}}
+
+
 
 
 

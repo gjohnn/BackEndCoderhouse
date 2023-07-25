@@ -2,20 +2,24 @@
   <div class=" d-flex" style="height:300px;justify-content:center;align-items:center">
     Login
   </div>
-  <form action="/api/session/login" method="POST">
+  <form action="/api/session/loginRestorePass" method="POST">
     <div class="form-group">
       <label for="email">Email:</label>
       <input type="email" class="form-control" id="email" name="email" required>
     </div>
     <div class="form-group">
-      <label for="password">Password</label>
+      <label for="password">New password</label>
       <input type="password" class="form-control" id="password" name="password" required>
     </div>
     <div class="mt-1">
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">OK</button>
     </div>
   </form>
   <div></div>
+  <div>
+
+  
   <button onclick="location.href = '/api/session/register'">Register</button>
-  <button onclick="location.href = '/api/session/loginRestorePass'">Restore password</button>
+  <button onclick="location.href = '/api/session/login'">Login</button>
+  </div>
 </div>
