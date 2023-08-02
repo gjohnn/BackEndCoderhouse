@@ -1,14 +1,38 @@
 import passport from "passport";
 import local from 'passport-local'
+import jwt from "passport-jwt";
 import GithubStrategy from 'passport-github2'
 import { userService } from '../services/users.service.js'
 import { createHash, isValidPassword } from "../utils/moreUtils.js";
 import { generateToken, authToken } from "../utils/jwt.js";
+
+
 const LocalStrategy = local.Strategy;
+
+const JWTStrategy = jwt.Strategy;
+const ExtractJWT = jwt.ExtractJwt;
+
+const cookieExtractor = req => {
+    let token = null;
+    if (req && req.cookies) {
+        token = req.cookies['authToken']
+    };
+    return token;
+}
 
 
 const initializePassport = () => {
 
+    passport.use('jwt', new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey: 'privateKey',
+    }, async (jwt_payload, done) => {
+        try {
+            return done(null, jwt_payload)
+        } catch (error) {
+            return done(error)
+        }
+    }))
 
 
     passport.use('github', new GithubStrategy({
@@ -40,6 +64,8 @@ const initializePassport = () => {
         }
     }))
 
+    
+
     passport.use('register', new LocalStrategy({
         passReqToCallback: true, usernameField: 'email'
     }, async (req, username, password, done) => {
@@ -64,7 +90,7 @@ const initializePassport = () => {
         } catch (error) {
             console.log(error);
         }
-     } ))
+    }))
 
 
 

@@ -19,12 +19,13 @@ import { cartsRouter } from "./routes/cart.routes.js";
 import { realTimeProdsRouter } from "./routes/realTimeProds.routes.js";
 import { homeRouter } from "./routes/home.routes.js";
 import { sessionRouter } from "./routes/session.routes.js";
-
 import productsRouter from "./routes/products.routes.js";
 import userRouter from "./routes/user.routes.js";
+
 //ONLY VIEWS
 import handlebars from "express-handlebars";
 import { viewsRouter } from "./routes/views.routes.js";
+
 //DB
 import mongoose from "mongoose";
 import { userModel } from "./DAO/models/user.model.js";
@@ -32,9 +33,7 @@ import { prodModel } from "./DAO/models/prods.model.js";
 import { cartModel } from "./DAO/models/cart.model.js";
 
 //jwt
-
-import { generateToken } from "./utils/jwt.js";
-import { authToken } from "./utils/jwt.js";
+import { generateToken, authToken } from "./utils/jwt.js";
 
 
 
@@ -67,7 +66,7 @@ app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
-//sessions
+//sessions and cookies
 
 app.use(cookieParser())
 
@@ -77,7 +76,7 @@ app.use(session({
     mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
     ttl: 500
   }),
-  secret: "It's me, Mario!",
+  secret: "privateKey",
   resave: false,
   saveUninitialized: false
 }))
@@ -116,6 +115,10 @@ app.use("/api/users", userRouter)
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/", viewsRouter)
+
+app.get('/current', passport.authenticate('jwt'), (req,res)=>{
+  return res.send('Llegamos con passport')
+})
 
 app.get("*", (req, res) => {
   let msg = "Page not found!"

@@ -3,17 +3,20 @@ import jwt from "jsonwebtoken";
 const PRIVATE_KEY = "clavePrivadaSecreta"
 
 export const generateToken = user => {
-    const token = jwt.sign({ user }, PRIVATE_KEY, { expiresIn: "60s" });
+    const token = jwt.sign({ user }, PRIVATE_KEY, { expiresIn: "120s" });
     return token;
 }
 
-export const authToken = (req,res,next)=>{
-    const authHeader = req.headers.authorization;
-    if(!authHeader) return res.status(401).send({error:'Not authenticated'})
-    const token = authHeader.split(' ')[1];
-    jwt.verify(token,PRIVATE_KEY,(error,credentials)=>{
-        if(error) return res.status(403).send({error:'Not authorized'})
-        req.user = credentials.user
-        next();
-    })
+export const authToken = (req, res, next) => {
+    const token = req.cookies.authToken;
+
+    if (!token) return res.status(401).json({ error: 'no token', msg: 'no token' })
+
+    try {
+        req.user = jwt.verify(token, PRIVATE_KEY)
+    } catch (error) {
+        return res.status(403).json({ error: 'Invalid token', msg: 'The sent token is invalid or hasnt got access' })
+    }
+
+    next();
 }

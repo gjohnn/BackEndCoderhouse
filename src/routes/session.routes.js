@@ -19,12 +19,16 @@ sessionRouter.get('/register', async (req, res) => {
     }
 })
 sessionRouter.post('/register', passport.authenticate('register', { failureRedirect: '/api/session/failRegister' }), async (req, res) => {
-    res.render('login', {})
+    let {email} = req.body;
+    let userFound = await userService.getUserByEmail(email)
+    if(userFound) return res.send("User already registered")
+
+    return res.render('login', {})
 })
 
 sessionRouter.get('/failRegister', async (req, res) => {
     let msg = "Failed to register user"
-    res.render('errorPage', { msg })
+    return res.render('register', { msg:'user already registered' })
 })
 
 
@@ -74,7 +78,7 @@ sessionRouter.post('/login', passport.authenticate('login', { failureRedirect: '
 
 sessionRouter.get('/failLogin', async (req, res) => {
     let msg = "Failed to login"
-    res.render('errorPage', { msg })
+    return res.render('errorPage', { msg })
 })
 
 
@@ -92,7 +96,7 @@ sessionRouter.post('/loginRestorePass', async (req, res) => {
         let { email, password } = req.body
         let validateUser = await userService.getUserByEmail(email)
         if (!validateUser) {
-            res.render('register', {})
+            return res.render('register', {})
         } else {
             let newPass = createHash(password)
             await userService.updateUserPass(email, newPass)
@@ -122,7 +126,7 @@ sessionRouter.get('/github', passport.authenticate('github', { scope: ['user:ema
 
 sessionRouter.get('/githubcallback', passport.authenticate('github', { failureRedirect: "/login" }), async (req, res) => {
     req.session.user = req.user;
-    res.redirect('/')
+    return res.redirect('/')
 })
 
 /*

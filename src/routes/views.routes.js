@@ -5,6 +5,7 @@ import { cartService } from '../services/carts.service.js';
 import { prodService } from '../services/prods.service.js';
 
 export const viewsRouter = Router();
+
 viewsRouter.get('/', async (req, res) => {
     try{
         let validateUser = req.session.user

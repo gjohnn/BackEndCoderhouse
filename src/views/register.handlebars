@@ -2,6 +2,9 @@
   <div class=" d-flex" style="height:300px;justify-content:center;align-items:center">
     Register
   </div>
+  {{#if msg}}
+  <div>{{msg}}</div>
+  {{/if}}
   <form action="/api/session/register" method="POST">
     <div class="form-group " style="width: 500px;">
       <label for="first_name">First Name:</label>
