@@ -15,17 +15,19 @@ import __dirname from "./utils.js";
 import { Server } from "socket.io";
 
 //ROUTES
+
 import PracticeNewRouter from "./routes/practice.routes.js";
-import { cartsRouter } from "./routes/cart.routes.js";
-import { realTimeProdsRouter } from "./routes/realTimeProds.routes.js";
-import { homeRouter } from "./routes/home.routes.js";
+
+import RealTimeProdsRouter from "./routes/realTimeProds.routes.js";
+import CartsRouter from "./routes/cart.routes.js";
+import HomeRouter from "./routes/home.routes.js";
 import SessionRouter from "./routes/session.routes.js";
-import productsRouter from "./routes/products.routes.js";
-import userRouter from "./routes/user.routes.js";
+import ProductsRouter from "./routes/products.routes.js"
+
 
 //ONLY VIEWS
 import handlebars from "express-handlebars";
-import { viewsRouter } from "./routes/views.routes.js";
+import ViewsRouter from "./routes/views.routes.js";
 
 //DB
 import mongoose from "mongoose";
@@ -35,6 +37,7 @@ import { cartModel } from "./DAO/models/cart.model.js";
 
 //jwt
 import { generateToken, authToken } from "./utils/jwt.js";
+import UserRouter from "./routes/user.routes.js";
 
 
 
@@ -104,20 +107,29 @@ app.use(express.static("public"));
 
 //Routes
 
-app.use("/home", homeRouter)
-app.use("/realtimeproducts", realTimeProdsRouter);
+const homeRouter = new HomeRouter();
+app.use("/home", homeRouter.getRouter())
 
+const realTimeProds = new RealTimeProdsRouter();
+app.use("/realtimeproducts", realTimeProds.getRouter());
 
-//NOW USING
 const practiceNewRouter = new PracticeNewRouter()
+app.use("/practice", practiceNewRouter.getRouter())
 
 const sessionRouter = new SessionRouter() 
 app.use('/api/session', sessionRouter.getRouter())
-app.use("/practice", practiceNewRouter.getRouter())
-app.use("/api/users", userRouter)
-app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
-app.use("/", viewsRouter)
+
+const userRouter = new UserRouter();
+app.use("/api/users", userRouter.getRouter())
+
+const viewsRouter = new ViewsRouter();
+app.use("/", viewsRouter.getRouter());
+
+const productsRouter = new ProductsRouter();
+app.use("/api/products", productsRouter.getRouter());
+
+const cartsRouter = new CartsRouter()
+app.use("/api/carts", cartsRouter.getRouter());
 
 app.get('/current', passport.authenticate('jwt'), (req,res)=>{
   return res.send('Llegamos con passport')

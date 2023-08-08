@@ -12,16 +12,16 @@ export default class RouterPass {
     }
     init() { }
     get(path, ...callbacks) {
-        this.router.get(path, handlePolicies, generateCustomResponses, this.applyCallbacks(callbacks));
+        this.router.get(path, generateCustomResponses, this.applyCallbacks(callbacks));
     }
     post(path, ...callbacks) {
-        this.router.post(path, handlePolicies, generateCustomResponses, this.applyCallbacks(callbacks));
+        this.router.post(path, generateCustomResponses, this.applyCallbacks(callbacks));
     }
     put(path, ...callbacks) {
-        this.router.put(path, handlePolicies, generateCustomResponses, this.applyCallbacks(callbacks));
+        this.router.put(path, generateCustomResponses, this.applyCallbacks(callbacks));
     }
     delete(path, ...callbacks) {
-        this.router.delete(path, handlePolicies, generateCustomResponses, this.applyCallbacks(callbacks));
+        this.router.delete(path, generateCustomResponses, this.applyCallbacks(callbacks));
     }
     applyCallbacks(callbacks) {
         return callbacks.map((callback) => async (...params) => {

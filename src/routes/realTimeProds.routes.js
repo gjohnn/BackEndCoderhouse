@@ -1,22 +1,29 @@
-import express from "express";
 import mongoose from "mongoose";
 import { prodService } from "../services/prods.service.js";
 import { upload } from "../DAO/oldFunctions.js";
+import RouterPass from "./router.routes.js";
 
-export const realTimeProdsRouter = express.Router();
-
-realTimeProdsRouter.get("/", async (req, res) => {
-  let prods;
-  try {
-    prods = await prodService.getAllProds()
-    const title = "Product list";
-    return res.status(200).render("realTimeProducts", {prods, title });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ status: "error", msg: "No se pudo obtener los productos" });
+export default class RealTimeProdsRouter extends RouterPass {
+  init() {
+    this.get("/", async (req, res) => {
+      let prods;
+      try {
+        prods = await prodService.getAllProds()
+        const title = "Product list";
+        return res.status(200).render("realTimeProducts", { prods, title });
+      } catch (error) {
+        return res
+          .status(500)
+          .json({ status: "error", msg: "No se pudo obtener los productos" });
+      }
+    });
   }
-});
+}
+
+
+
+
+
 
 
 /*
