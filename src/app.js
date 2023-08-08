@@ -15,10 +15,11 @@ import __dirname from "./utils.js";
 import { Server } from "socket.io";
 
 //ROUTES
+import PracticeNewRouter from "./routes/practice.routes.js";
 import { cartsRouter } from "./routes/cart.routes.js";
 import { realTimeProdsRouter } from "./routes/realTimeProds.routes.js";
 import { homeRouter } from "./routes/home.routes.js";
-import { sessionRouter } from "./routes/session.routes.js";
+import SessionRouter from "./routes/session.routes.js";
 import productsRouter from "./routes/products.routes.js";
 import userRouter from "./routes/user.routes.js";
 
@@ -74,7 +75,7 @@ app.use(session({
   store: MongoStore.create({
     mongoUrl: 'mongodb+srv://gjohn:JOHNhpxd@coderback.huvf7ed.mongodb.net/session?retryWrites=true&w=majority',
     mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-    ttl: 500
+    ttl: 5000
   }),
   secret: "privateKey",
   resave: false,
@@ -108,9 +109,11 @@ app.use("/realtimeproducts", realTimeProdsRouter);
 
 
 //NOW USING
+const practiceNewRouter = new PracticeNewRouter()
 
-app.use('/api/session', sessionRouter)
-
+const sessionRouter = new SessionRouter() 
+app.use('/api/session', sessionRouter.getRouter())
+app.use("/practice", practiceNewRouter.getRouter())
 app.use("/api/users", userRouter)
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);

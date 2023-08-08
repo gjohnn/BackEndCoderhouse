@@ -62,9 +62,26 @@
 
 {{/if}}
 
-{{#each prods}}
-<li>{{this}}</li>
-{{/each}}
+<div class="container d-flex flex-wrap ">
+  {{#each prods}}
+  
+    <div class="m-4 border border-light p-1 ">
+      
+      <li class="text-uppercase" > Title: {{this.title}}</li>
+      <li>Description: {{this.description}}</li>
+      <li>Price: {{this.price}}</li>
+      <li>Thumbnail: {{this.thumbnail}}</li>
+      
+      <li>Stock: {{this.stock}}</li>
+      <li>Status: {{this.status}}</li>
+      <li>Category: {{this.category}}</li>
+<button type="button" class="btn btn-success container">Add to cart</button>
+
+    </div>
+    <hr />
+
+  {{/each}}
+</div>
 
 
 
